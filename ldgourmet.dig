@@ -1,0 +1,31 @@
+_export:
+    expand_dir:       data
+    csv_areas:        ${expand_dir}/areas.csv
+    csv_categories:   ${expand_dir}/categories.csv
+    csv_prefs:        ${expand_dir}/prefs.csv
+    csv_rating_votes: ${expand_dir}/rating_votes.csv
+    csv_ratings:      ${expand_dir}/ratings.csv
+    csv_restaurants:  ${expand_dir}/restaurants.csv
+    csv_stations:     ${expand_dir}/stations.csv
+    output_csv:       output.csv
++extract:
+    _parallel: false
+    _export:
+        file_name: ldgourmet.tar.gz
+        base_url:  https://github.com/livedoor/datasets/raw/master/
+    +mkdir:
+        sh>: mkdir -p ${expand_dir}
+    +download:
+        sh>: wget -O - ${base_url}/${file_name} | tar xvpfz - -C ${expand_dir}
++transform:
+    _parallel: false
+    _export:
+    +rename_column:
+        sh>: echo no task
+    +convert_csv_to_json:
+        sh>: echo no task
+    +join:
+        py>: tasks.Convert.transform
++load:
+    _parallel: false
+    _export:
